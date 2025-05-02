@@ -4,7 +4,7 @@ const joi = require("joi");
 // إنشاء الجدول بعد التأكد من وجود جدول user مسبقًا
 db.run(`CREATE TABLE IF NOT EXISTS product (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
     status TEXT NOT NULL,
     quantity INTEGER NOT NULL,
     user_id INTEGER,

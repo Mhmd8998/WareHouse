@@ -29,9 +29,19 @@ module.exports = {
                         else resolve();
                     });
                 });
-    
+                await new Promise((resolve, reject) => {
+                db.run(
+                    "INSERT INTO product (name, status, quantity, user_id) VALUES (?, ?, ?,?)",
+                    [name, status, quantity, req.user.id],
+                    function (err) {
+                        if (err) reject(err);
+                        else resolve();
+                    }
+                );
+            });
+       
                 return res.status(200).json({
-                    message: "تم تحديث الكمية لأن المنتج موجود مسبقًا.",
+                    message: "تمت العملية بنجاح .",
                     product: { name, status, quantity: newQuantity }
                 });
             }
@@ -49,7 +59,7 @@ module.exports = {
             });
     
             return res.status(201).json({
-                message: "تم إنشاء المنتج بنجاح.",
+                message: "تم العملية بنجاح.",
                 product: { name, status, quantity }
             });
     

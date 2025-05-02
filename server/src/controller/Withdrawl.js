@@ -47,7 +47,7 @@ module.exports = {
     
                 // تحديث الكمية في جدول المنتجات
                 await new Promise((resolve, reject) => {
-                    db.run("UPDATE product SET quantity = ? WHERE id = ? && status = ?", [newQuantity, product.id,product.status], function (err) {
+                    db.run("UPDATE product SET quantity = ? WHERE id = ? ", [newQuantity, product.id], function (err) {
                         if (err) reject(err);
                         else resolve();
                     });
@@ -68,6 +68,7 @@ module.exports = {
                 // أضف السحب إلى النتيجة النهائية
                 withdrawnProducts.push({
                     name: product_name,
+                    status,
                     quantity,
                     note: note || "No note provided"
                 });

@@ -79,5 +79,32 @@ module.exports = {
             }
             return res.status(200).json(rows);
         });
-    })
+    }),
+    
+gitwithname: asyncHandler(async (req, res) => {
+    const { name, status } = req.body;
+
+    if (!name && !status) {
+        return res.status(400).json({ message: "يجب إدخال الاسم أو الحالة للبحث." });
+    }
+
+    
+        const result = await new Promise((resolve, reject) => {
+            db.all(
+                `SELECT * FROM product WHERE name = ? OR status = ?`,
+                [name, status],
+                (err, rows) => {
+                    if (err) reject(err);
+                    else resolve(rows);
+                }
+            );
+        });
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: "لم يتم العثور على منتجات مطابقة." });
+        }
+
+        return res.status(200).json(result);
+    
+});
 }

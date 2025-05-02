@@ -13,7 +13,7 @@ module.exports = {
         try {
             // البحث عن المنتج في قاعدة البيانات
             const existingProduct = await new Promise((resolve, reject) => {
-                db.get("SELECT * FROM product WHERE name = ? && status = ?", [name, status], (err, row) => {
+                db.get("SELECT * FROM product WHERE name = ? AND status = ?", [name, status], (err, row) => {
                     if (err) reject(err);
                     else resolve(row);
                 });
@@ -24,7 +24,7 @@ module.exports = {
                 const newQuantity = existingProduct.quantity + quantity;
     
                 await new Promise((resolve, reject) => {
-                    db.run("UPDATE product SET quantity = ? WHERE name = ? && status = ?", [newQuantity, name, status], function (err) {
+                    db.run("UPDATE product SET quantity = ? WHERE name = ? AND status = ?", [newQuantity, name, status], function (err) {
                         if (err) reject(err);
                         else resolve();
                     });

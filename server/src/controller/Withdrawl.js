@@ -20,7 +20,7 @@ module.exports = {
             const withdrawnProducts = [];
     
             for (const item of products) {
-                const { product_name, quantity, note } = item;
+                const { product_name, status, quantity, note } = item;
     
                 // تحقق من أن الكمية رقم صالح وغير سالبة
                 if (typeof quantity !== 'number' || isNaN(quantity) || quantity <= 0) {
@@ -29,7 +29,7 @@ module.exports = {
     
                 // الحصول على المنتج من جدول المنتجات
                 const product = await new Promise((resolve, reject) => {
-                    db.get("SELECT * FROM product WHERE name = ?", [product_name], (err, row) => {
+                    db.get("SELECT * FROM product WHERE name = ? && status = ?", [product_name, status], (err, row) => {
                         if (err) reject(err);
                         else resolve(row);
                     });
@@ -47,7 +47,7 @@ module.exports = {
     
                 // تحديث الكمية في جدول المنتجات
                 await new Promise((resolve, reject) => {
-                    db.run("UPDATE product SET quantity = ? WHERE id = ?", [newQuantity, product.id], function (err) {
+                    db.run("UPDATE product SET quantity = ? WHERE id = ? && status = ?", [newQuantity, product.id,product.status], function (err) {
                         if (err) reject(err);
                         else resolve();
                     });
@@ -56,8 +56,8 @@ module.exports = {
                 // إدخال عملية السحب في جدول السحب
                 await new Promise((resolve, reject) => {
                     db.run(
-                        "INSERT INTO product_withdrawal (product_id, quantity, user_id, note) VALUES (?, ?, ?, ?)",
-                        [product.id, quantity, req.user.id, note || null],
+                        "INSERT INTO product_withdrawal (product_id, status, quantity, user_id, note) VALUES (?, ?, ?, ?)",
+                        [product.id, status, quantity, req.user.id, note || null],
                         function (err) {
                             if (err) reject(err);
                             else resolve();

@@ -5,6 +5,7 @@ const joi = require("joi");
 db.run(`CREATE TABLE IF NOT EXISTS product_withdrawal (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     product_id INTEGER NOT NULL,
+    status TEXT NOT NULL,
     quantity INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     note TEXT,  -- ملاحظة السحب
@@ -17,7 +18,8 @@ db.run(`CREATE TABLE IF NOT EXISTS product_withdrawal (
 const validateCreateWithdrawl = (obj) => {
     const productSchema = joi.object({
         product_name: joi.string().trim().max(100).min(3).required(),
-        note: joi.string().trim().max(200).min(3).required(),
+        note: joi.string().trim().max(200).min(3),
+        status:joi.string().trim().max(50).min(3).required(),
         quantity: joi.number().integer().min(1).required()
     });
 

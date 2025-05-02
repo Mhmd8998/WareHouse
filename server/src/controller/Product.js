@@ -8,12 +8,12 @@ module.exports = {
             return res.status(400).json({ message: error.details[0].message });
         }
     
-        let { name, quantity } = req.body;
+        let { name, status, quantity } = req.body;
     
         try {
             // البحث عن المنتج في قاعدة البيانات
             const existingProduct = await new Promise((resolve, reject) => {
-                db.get("SELECT * FROM product WHERE name = ?", [name], (err, row) => {
+                db.get("SELECT * FROM product WHERE name = ? && status = ?", [name, status], (err, row) => {
                     if (err) reject(err);
                     else resolve(row);
                 });
@@ -24,7 +24,7 @@ module.exports = {
                 const newQuantity = existingProduct.quantity + quantity;
     
                 await new Promise((resolve, reject) => {
-                    db.run("UPDATE product SET quantity = ? WHERE name = ?", [newQuantity, name], function (err) {
+                    db.run("UPDATE product SET quantity = ? WHERE name = ? && status = ?", [newQuantity, name, status], function (err) {
                         if (err) reject(err);
                         else resolve();
                     });
@@ -32,15 +32,15 @@ module.exports = {
     
                 return res.status(200).json({
                     message: "تم تحديث الكمية لأن المنتج موجود مسبقًا.",
-                    product: { name, quantity: newQuantity }
+                    product: { name, status, quantity: newQuantity }
                 });
             }
     
             // المنتج غير موجود: إدخاله
             await new Promise((resolve, reject) => {
                 db.run(
-                    "INSERT INTO product (name, quantity, user_id) VALUES (?, ?, ?)",
-                    [name, quantity, req.user.id],
+                    "INSERT INTO product (name, status, quantity, user_id) VALUES (?, ?, ?,?)",
+                    [name, status, quantity, req.user.id],
                     function (err) {
                         if (err) reject(err);
                         else resolve();
@@ -50,7 +50,7 @@ module.exports = {
     
             return res.status(201).json({
                 message: "تم إنشاء المنتج بنجاح.",
-                product: { name, quantity }
+                product: { name, status, quantity }
             });
     
         } catch (error) {

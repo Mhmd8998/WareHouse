@@ -29,7 +29,7 @@ module.exports = {
     
                 // الحصول على المنتج من جدول المنتجات
                 const product = await new Promise((resolve, reject) => {
-                    db.get("SELECT * FROM product WHERE name = ? && status = ?", [product_name, status], (err, row) => {
+                    db.get("SELECT * FROM product WHERE name = ? AND status = ?", [product_name, status], (err, row) => {
                         if (err) reject(err);
                         else resolve(row);
                     });

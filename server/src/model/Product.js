@@ -8,6 +8,7 @@ db.run(`CREATE TABLE IF NOT EXISTS product (
     status TEXT NOT NULL,
     quantity INTEGER NOT NULL,
     user_id INTEGER,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id)
 )`);
 const validateCreateProductSchema = (obj) => {

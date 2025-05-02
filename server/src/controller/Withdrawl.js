@@ -91,6 +91,22 @@ module.exports = {
             }
             return res.status(200).json(rows);
         });
+    }),
+    gitwithname: asynchandler (async (req,res)=>{
+        const {name} = req.body;
+        if(!name){
+            return res.status(404).json({message:"Invalid name"});
+        }
+        const result= await new Promise((rej,resolve)=>{
+            db.get(`SELECT * FROM product_withdrawal WHERE name = ?`,
+                   [name],
+                   function (err){
+                       if(err) rej(err);
+                       else resolve();
+                   }
+                  )
+        })
+        return res.status(200).json(result);
     })
     
 }

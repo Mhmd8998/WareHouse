@@ -1,6 +1,10 @@
 {
   "name": "warehouse",
   "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.18.2",
+    "serverless-http": "^3.0.0"
+  },
   "description": "warehouse for my work",
   "main": "src/index.js",
   "scripts": {

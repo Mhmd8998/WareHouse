@@ -1,6 +1,8 @@
+
 import { Geist, Geist_Mono } from "next/font/google";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./globals.css";
+import Navbar from "./component/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,36 +20,12 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  
+
   return (
     <html lang="ar" dir="rtl">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-      <nav className="navbar navbar-expand-lg  bg-primary ">
-  <div className="container-fluid justify-content-around ">
-    <a className="navbar-brand text-white" href="#">المستودع</a>
-    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span className="navbar-toggler-icon"></span>
-    </button>
-    <div className="collapse navbar-collapse justify-content-evenly" id="navbarNavDropdown">
-      <ul className="navbar-nav">
-        <li className="nav-item">
-          <a className="nav-link active text-white" aria-current="page" href="#">الرئيسية</a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link text-white" href="#">الادخال </a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link text-white" href="#">الاخراج</a>
-        </li>
-        
-      </ul>
-      <li className="d-flex flex-row justify-content-between align-items-center">
-          <a className="btn btn-outline-light  mx-2" href="#">تسجيل الدخول</a>
-          <br/>
-          <a className="btn btn-outline-light " href="#">انشاء حساب </a>
-        </li>
-    </div>
-  </div>
-</nav>
+        <Navbar />
         {children}
         <div className="card text-center">
   <div className="card-header">

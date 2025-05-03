@@ -4,7 +4,12 @@ import { useState, useEffect } from 'react';
 
 export default function Navbar() {
   const [token, setToken] = useState(null);
-
+  const handleLogout = () => {
+    //حذف توكين في localStorage
+    localStorage.setItem('token', "");
+      //حذف ايدي المستخدم في localStorage
+    localStorage.setItem('user_id', "");
+  }
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
     setToken(savedToken);
@@ -31,6 +36,8 @@ export default function Navbar() {
                    <a className="nav-link text-white" href="#">الاخراج</a>
             </li>
           </div>                 
+         ):(
+          <button onClick={handleLogout} className="btn btn-danger">logout</button>
          )}
           
         </ul>

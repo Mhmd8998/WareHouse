@@ -22,11 +22,6 @@ module.exports = {
             for (const item of products) {
                 const { product_name, status, quantity, note } = item;
     
-                // تحقق من أن الكمية رقم صالح وغير سالبة
-                if (typeof quantity !== 'number' || isNaN(quantity) || quantity <= 0) {
-                    return res.status(400).json({ message: `Invalid quantity for product: ${product_name}` });
-                }
-    
                 // الحصول على المنتج من جدول المنتجات
                 const product = await new Promise((resolve, reject) => {
                     db.get("SELECT * FROM product WHERE name = ? AND status = ?", [product_name, status], (err, row) => {
@@ -36,11 +31,11 @@ module.exports = {
                 });
     
                 if (!product) {
-                    return res.status(404).json({ message: `Product not found: ${product_name}` });
+                    return res.status(404).json({ message: `المنتج غير موجود: ${product_name}` });
                 }
     
                 if (product.quantity < quantity) {
-                    return res.status(400).json({ message: `Not enough stock for product: ${product_name}` });
+                    return res.status(400).json({ message: `عذرآ الكمية التي ادخلتها أكبر من الكمية المتاحة في المنتج: ${product_name}` });
                 }
     
                 const newQuantity = product.quantity - quantity;
@@ -56,8 +51,8 @@ module.exports = {
                 // إدخال عملية السحب في جدول السحب
                 await new Promise((resolve, reject) => {
                     db.run(
-                        "INSERT INTO product_withdrawal (product_id, status, quantity, user_id, note) VALUES (?, ?, ?, ?)",
-                        [product.id, status, quantity, req.user.id, note || null],
+                        "INSERT INTO product_withdrawal (product_id, status, quantity, user_id, note) VALUES (?, ?, ?, ?, ?)",
+                        [product.id, status, quantity, req.user.id, note || "لايوجد"],
                         function (err) {
                             if (err) reject(err);
                             else resolve();
@@ -70,52 +65,52 @@ module.exports = {
                     name: product_name,
                     status,
                     quantity,
-                    note: note || "No note provided"
+                    note: note || "لا يوجد"
                 });
             }
     
             return res.status(201).json({
-                message: "Products withdrawn successfully.",
+                message: "تمت اضافة السحب بنجاح.",
                 withdrawals: withdrawnProducts
             });
     
         } catch (error) {
-            console.error("Database error:", error);
-            return res.status(500).json({ message: "Database error." });
+            console.error("خطاء في قاعدة البيانات:", error);
+            return res.status(500).json({ message: "خطاء في قاعدة البيانات" });
         }
     }),
     gitWitdraw:asyncHandler(async (req,res)=>{
         db.all("SELECT * FROM product_withdrawal", [], (err, rows) => {
             if (err) {
-                return res.status(500).json({ message: "Database error", error: err.message });
+                return res.status(500).json({ message: "خطاء في قاعدة البيانات", error: err.message });
             }
             return res.status(200).json(rows);
         });
     }),
     
-gitwithname: asyncHandler(async (req, res) => {
-    const { name, status } = req.body;
+    gitwithname: asyncHandler(async (req, res) => {
+        const { name, status } = req.body;
 
-    if (!name && !status) {
-        return res.status(400).json({ message: "يجب إدخال الاسم أو الحالة للبحث." });
-    }
-  
-    const result = await new Promise((resolve, reject) => {
-        db.all(
-            `SELECT * FROM product_withdrawal WHERE name = ? OR status = ?`,
-            [name, status],
-            (err, rows) => {
-                if (err) reject(err);
-                else resolve(rows);
-            }
-        );
-    });
+        if (!name && !status) {
+            return res.status(400).json({ message: "يجب إدخال الاسم أو الحالة للبحث." });
+        }
+    
+        const result = await new Promise((resolve, reject) => {
+            db.all(
+                `SELECT * FROM product_withdrawal WHERE name = ? OR status = ?`,
+                [name, status],
+                (err, rows) => {
+                    if (err) reject(err);
+                    else resolve(rows);
+                }
+            );
+        });
 
-    if (result.length === 0) {
-        return res.status(404).json({ message: "لم يتم العثور على منتجات مطابقة." });
-    }
+        if (result.length === 0) {
+            return res.status(404).json({ message: "لم يتم العثور على منتجات مطابقة." });
+        }
 
-    return res.status(200).json(result);
-});
+        return res.status(200).json(result);
+    })
     
 }

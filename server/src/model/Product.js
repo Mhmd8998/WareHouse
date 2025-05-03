@@ -11,6 +11,17 @@ db.run(`CREATE TABLE IF NOT EXISTS product (
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id)
 )`);
+
+db.run(`CREATE TABLE IF NOT EXISTS product_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    status TEXT,
+    quantity INTEGER,
+    user_id INTEGER,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+`);
+
 const validateCreateProductSchema = (obj) => {
     const schema = joi.object({
     name: joi.string().trim().max(100).min(3).required(),

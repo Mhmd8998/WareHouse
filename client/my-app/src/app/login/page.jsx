@@ -22,9 +22,11 @@ export default function Login() {
 
     if (res.ok) {
       setMessage('Login successful');
-      setToken(data.token);
+      
       // يمكن تخزين التوكن في localStorage إذا أردت
       localStorage.setItem('token', data.token);
+      //تخزين ايدي المستخدم في localStorage
+      localStorage.setItem('user_id', data.id);
     } else {
       setMessage(data.message || 'Login failed');
     }

@@ -26,7 +26,7 @@ export default function Login() {
       // يمكن تخزين التوكن في localStorage إذا أردت
       localStorage.setItem('token', data.token);
       //تخزين ايدي المستخدم في localStorage
-      localStorage.setItem('user_id', data.id);
+      localStorage.setItem('user_id', data.user_id);
     } else {
       setMessage(data.message || 'Login failed');
     }

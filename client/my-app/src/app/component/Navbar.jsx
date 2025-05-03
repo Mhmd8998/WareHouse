@@ -36,8 +36,6 @@ export default function Navbar() {
                    <a className="nav-link text-white" href="#">الاخراج</a>
             </li>
           </div>                 
-         ):(
-          <button onClick={handleLogout} className="btn btn-danger">logout</button>
          )}
           
         </ul>
@@ -47,7 +45,9 @@ export default function Navbar() {
          <br/>
          <a className="btn btn-outline-light " href="/register">انشاء حساب </a>
        </li>
-       )
+       ):(
+       <button onClick={handleLogout} className="btn btn-danger">logout</button>
+         )
 
        }
       </div>

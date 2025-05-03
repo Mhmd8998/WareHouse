@@ -47,6 +47,6 @@ module.exports={
                 return res.status(401).json({message:"Invalid username or password"})
             }
             const token = jwt.sign({id:existingUser.id},process.env.JWT_SECRET,{expiresIn:"1d"});
-            res.status(200).json({message:"login success",token})})
+            res.status(200).json({message:"login success",token,existingUser.id})})
     })
 }

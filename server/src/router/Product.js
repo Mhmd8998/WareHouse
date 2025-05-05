@@ -5,6 +5,6 @@ const { verifyToken } = require("../middlewares/verifyToken");
 
 router.post("/",verifyToken,con.createProduct);
 router.get("/",verifyToken,con.allprod);
-router.get("/search",verifyToken,con.gitwithname);
+router.post("/search",verifyToken,con.gitwithname);
 
 module.exports = router;

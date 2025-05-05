@@ -1,10 +1,13 @@
 "use client"
 import { useState } from 'react';
+import { useRouter } from "next/navigation"; 
+
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const router = useRouter();
 
 
   const handleLogin = async (e) => {
@@ -27,6 +30,9 @@ export default function Login() {
       localStorage.setItem('token', data.token);
       //تخزين ايدي المستخدم في localStorage
       localStorage.setItem('user_id', data.user_id);
+      setMessage(data.message);
+      setTimeout(() => router.push("/"), 1000);
+
     } else {
       setMessage(data.message || 'Login failed');
     }

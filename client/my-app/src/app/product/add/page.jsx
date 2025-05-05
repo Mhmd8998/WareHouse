@@ -1,5 +1,6 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from "next/navigation"; 
 
 export default function Login() {
   const [name, setName] = useState('');
@@ -7,6 +8,7 @@ export default function Login() {
   const [status, setStatus] = useState('');
   const [message, setMessage] = useState('');
   const [token, setToken] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
      const storedToken = localStorage.getItem('token');
@@ -28,7 +30,8 @@ export default function Login() {
     const data = await res.json();
     
     setMessage(data.message);
-
+    if(res.ok) setTimeout(() => router.push("/"), 1000);
+    else setMessage(data.message);
     
   };
 

@@ -1,10 +1,13 @@
 "use client"
 import { useState } from 'react';
+import { useRouter } from "next/navigation"; 
+
 
 export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +22,8 @@ export default function Register() {
 
     const data = await res.json();
     setMessage(data.message);
+    if(res.ok) setTimeout(() => router.push("/login"), 1000);
+
   };
 
   return (

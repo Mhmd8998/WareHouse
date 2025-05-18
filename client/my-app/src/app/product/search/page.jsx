@@ -63,7 +63,7 @@ export default function Search() {
           <option value="مستعمل">مستعمل</option>
           <option value="تالف">تالف</option>
         </select>
-        <button onClick={handleSearch} className="btn btn-primary">
+        <button onClick={handleSearch} className="btn btn-warning">
           بحث
         </button>
       </div>

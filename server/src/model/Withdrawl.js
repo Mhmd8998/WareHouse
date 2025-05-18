@@ -7,6 +7,7 @@ db.run(`CREATE TABLE IF NOT EXISTS product_withdrawal (
     product_id INTEGER NOT NULL,
     status TEXT NOT NULL,
     quantity INTEGER NOT NULL,
+    recipient TEXT NOT NULL,
     user_id INTEGER NOT NULL,
     note TEXT,  -- ملاحظة السحب
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -20,6 +21,7 @@ const validateCreateWithdrawl = (obj) => {
         product_name: joi.string().trim().max(100).min(3).required(),
         note: joi.string().trim().max(200).min(3),
         status:joi.string().trim().max(50).min(3).required(),
+        recipient:joi.string().trim().max(50).required(),
         quantity: joi.number().integer().min(1).required()
     });
 

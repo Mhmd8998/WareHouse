@@ -6,6 +6,7 @@ db.run(`CREATE TABLE IF NOT EXISTS product (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     status TEXT NOT NULL,
+    note TEXT,
     quantity INTEGER NOT NULL,
     user_id INTEGER,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -16,6 +17,7 @@ db.run(`CREATE TABLE IF NOT EXISTS product_log (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     status TEXT,
+    note TEXT,
     quantity INTEGER,
     user_id INTEGER,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP

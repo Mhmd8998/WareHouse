@@ -20,7 +20,7 @@ module.exports = {
             const withdrawnProducts = [];
     
             for (const item of products) {
-                const { product_name, status, quantity, note } = item;
+                const { product_name, status,recipient, quantity, note } = item;
     
                 // الحصول على المنتج من جدول المنتجات
                 const product = await new Promise((resolve, reject) => {
@@ -52,7 +52,7 @@ module.exports = {
                 await new Promise((resolve, reject) => {
                     db.run(
                         "INSERT INTO product_withdrawal (product_id, status, quantity, user_id, note) VALUES (?, ?, ?, ?, ?)",
-                        [product.id, status, quantity, req.user.id, note || "لايوجد"],
+                        [product.id, status, quantity,recipient, req.user.id, note || "لايوجد"],
                         function (err) {
                             if (err) reject(err);
                             else resolve();
@@ -65,6 +65,7 @@ module.exports = {
                     name: product_name,
                     status,
                     quantity,
+                    recipient,
                     note: note || "لا يوجد"
                 });
             }

@@ -1,12 +1,10 @@
-"use client"
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; 
 
-
 export default function Withdraw() {
   const [products, setProducts] = useState([
-    { product_name: "", quantity: 1, note: "", status: "جديد" },
+    { product_name: "", quantity: 1, note: "", status: "جديد", recipient: "" },
   ]);
   const [message, setMessage] = useState("");
   const [token, setToken] = useState("");
@@ -23,10 +21,10 @@ export default function Withdraw() {
     const updatedProducts = [...products];
     updatedProducts[index][field] = value;
 
-    // إذا غُيّرت الملاحظة في المنتج الأول، ننسخها إلى البقية
-    if (field === "note" && index === 0) {
+    // نسخ الملاحظة والمستلم من المنتج الأول إلى باقي المنتجات
+    if (index === 0 && (field === "note" || field === "recipient")) {
       for (let i = 1; i < updatedProducts.length; i++) {
-        updatedProducts[i].note = value;
+        updatedProducts[i][field] = value;
       }
     }
 
@@ -35,9 +33,10 @@ export default function Withdraw() {
 
   const addProduct = () => {
     const noteFromFirst = products[0]?.note || "";
+    const recipientFromFirst = products[0]?.recipient || "";
     setProducts([
       ...products,
-      { product_name: "", quantity: 1, note: noteFromFirst, status: "جديد" },
+      { product_name: "", quantity: 1, note: noteFromFirst, status: "جديد", recipient: recipientFromFirst },
     ]);
   };
 
@@ -49,6 +48,11 @@ export default function Withdraw() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage(""); // تنظيف الرسالة السابقة
+
+    if (!token) {
+      setMessage("يرجى تسجيل الدخول أولاً");
+      return;
+    }
 
     try {
       const res = await fetch("http://localhost:8000/api/withdrawl/", {
@@ -64,10 +68,8 @@ export default function Withdraw() {
 
       if (res.ok) {
         setMessage(data.message || "تم السحب بنجاح");
-        // إعادة التوجيه بعد قليل (اختياري: تأخير بسيط لرؤية الرسالة)
         setTimeout(() => router.push("/"), 1000);
       } else {
-        // عرض الخطأ القادم من السيرفر إن وُجد
         setMessage(data.message || "فشل في العملية");
       }
     } catch (error) {
@@ -109,15 +111,28 @@ export default function Withdraw() {
               </div>
 
               {index === 0 && (
-                <div className="mb-3">
-                  <label className="form-label">الملاحظة:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={product.note}
-                    onChange={(e) => handleProductChange(index, "note", e.target.value)}
-                  />
-                </div>
+                <>
+                  <div className="mb-3">
+                    <label className="form-label">الملاحظة:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={product.note}
+                      onChange={(e) => handleProductChange(index, "note", e.target.value)}
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">المستلم:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={product.recipient}
+                      onChange={(e) => handleProductChange(index, "recipient", e.target.value)}
+                      required
+                    />
+                  </div>
+                </>
               )}
 
               <div className="mb-3">

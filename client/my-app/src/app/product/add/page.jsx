@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import { useState, useEffect } from 'react';
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [name, setName] = useState('');
@@ -11,8 +11,8 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-     const storedToken = localStorage.getItem('token');
-     if (storedToken) setToken(storedToken);
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) setToken(storedToken);
   }, []);
 
   const handleAddProduct = async (e) => {
@@ -30,14 +30,16 @@ export default function Login() {
     const data = await res.json();
     
     setMessage(data.message);
-    if(res.ok) setTimeout(() => router.push("/"), 1000);
-    else setMessage(data.message);
     
+    if (res.ok) {
+      setTimeout(() => router.push("/"), 1000);
+    }
   };
 
   return (
     <form onSubmit={handleAddProduct} className='container w-75 my-5'>
-      <h2>اضافة منتج</h2>
+      <h2>إضافة منتج</h2>
+
       <div className="mb-3">
         <label className="form-label">اسم المنتج</label>
         <input
@@ -48,16 +50,22 @@ export default function Login() {
           required
         />
       </div>
+
       <div className="mb-3">
         <label className="form-label">الحالة</label>
-        <input
-          type="text"
-          className="form-control"
+        <select
+          className="form-select"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
           required
-        />
+        >
+          <option value="">-- اختر الحالة --</option>
+          <option value="جديد">جديد</option>
+          <option value="مستعمل">مستعمل</option>
+          <option value="تالف">تالف</option>
+        </select>
       </div>
+
       <div className="mb-3">
         <label className="form-label">الكمية</label>
         <input
@@ -68,8 +76,10 @@ export default function Login() {
           required
         />
       </div>
-      <button type="submit" className="btn btn-primary w-100">اضافة</button>
+
+      <button type="submit" className="btn btn-warning w-100">إضافة</button>
+
       {message && <div className="mt-3 alert alert-info">{message}</div>}
     </form>
   );
-  }
+}

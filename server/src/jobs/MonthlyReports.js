@@ -48,6 +48,13 @@ cron.schedule('0 1 16 * *', async () => {
     if (err) console.error("خطأ أثناء إرسال إشعار:", err);
   }
 );
+    await db.run(
+  "INSERT INTO notifications (message, user_id, type) VALUES (?, ?, ?)",
+  [`تم إنشاء تقرير ${نوع التقرير} بتاريخ ${currentDate}`, 1, 'report'],
+  (err) => {
+    if (err) console.error("خطأ أثناء إرسال إشعار:", err);
+  }
+);
   } catch (error) {
     
     console.error("خطأ أثناء إنشاء التقرير الشهري:", error);

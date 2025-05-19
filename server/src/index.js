@@ -6,6 +6,7 @@ const cors = require("cors");
 const Auth = require("./router/Auth");
 const Product = require("./router/Product");
 const Withdrawl = require('./router/Withdrawl');
+const Admin = require("../router/Admin");
 
 app.use(express.json())
 app.use(cors({origin: "http://localhost:3000"}))
@@ -13,6 +14,7 @@ app.use(cors({origin: "http://localhost:3000"}))
 app.use("/api/auth",Auth);
 app.use("/api/product",Product);
 app.use("/api/withdrawl",Withdrawl);
+app.use("/api/admin",Admin);
 
 app.get("/",(req,res)=>{
     res.send("hello world")

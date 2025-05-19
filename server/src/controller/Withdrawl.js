@@ -59,7 +59,7 @@ module.exports = {
                     );
                 });
 
-                // إنشاء إشعار لعملية السحب
+                // إرسال إشعار بعملية السحب
                 await new Promise((resolve, reject) => {
                     const notifMessage = `تم سحب ${quantity} من المنتج ${product_name} (${status}) إلى المستلم ${recipient}`;
                     db.run(
@@ -72,7 +72,22 @@ module.exports = {
                     );
                 });
 
-                // إضافة إلى قائمة النتائج
+                // إرسال إشعار إذا الكمية أصبحت أقل من 3
+                if (newQuantity < 3) {
+                    const lowStockMessage = `المنتج ${product_name} (${status}) أوشك على النفاد. الكمية الحالية: ${newQuantity}`;
+                    await new Promise((resolve, reject) => {
+                        db.run(
+                            "INSERT INTO notifications (message, status, user_id) VALUES (?, ?, ?)",
+                            [lowStockMessage, status, req.user.id],
+                            (err) => {
+                                if (err) reject(err);
+                                else resolve();
+                            }
+                        );
+                    });
+                }
+
+                // إضافة إلى النتائج
                 withdrawnProducts.push({
                     name: product_name,
                     status,

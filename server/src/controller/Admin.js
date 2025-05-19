@@ -1,5 +1,8 @@
 const db = require('../DB/db');
 const asyncHandler = require("express-async-handler");
+require("../jobs/MonthlyReports");
+require("../jobs/WeklyReports");
+
 
 module.exports = {
     getAdminNotification: asyncHandler(async (req, res) => {

@@ -17,7 +17,15 @@ function verifyToken (req, res, next){
     return res.status(401).json({ message: "No Token Provided" });
   }
 }
-
+function verifyTokenAndAdmin(req, res, next){
+  verifyToken(req, res, () => {
+    if (req.user.isAdmin){
+      next();
+    }else{
+      return res.status(401).json({ message: "Not allowed, only admin" });
+    }
+  });
+}
 
 function verifyTokenAndUserId(req, res, next){
   verifyToken(req, res, () => {
@@ -31,5 +39,6 @@ function verifyTokenAndUserId(req, res, next){
 
 module.exports = {
   verifyTokenAndUserId,
+  verifyTokenAndAdmin,
   verifyToken
 };

@@ -21,7 +21,6 @@ db.run(` CREATE TABLE IF NOT EXISTS weekly_report (
   type TEXT NOT NULL, -- مثل weekly_withdrawal أو monthly_log
   data TEXT NOT NULL, -- سيتم تخزين البيانات على شكل JSON
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
 )`);
 db.run(`CREATE TABLE IF NOT EXISTS monthly_report (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,7 +28,6 @@ db.run(`CREATE TABLE IF NOT EXISTS monthly_report (
   type TEXT NOT NULL, -- مثل weekly_withdrawal أو monthly_log
   data TEXT NOT NULL, -- سيتم تخزين البيانات على شكل JSON
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
 )`);
 
 

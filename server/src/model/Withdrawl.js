@@ -15,6 +15,23 @@ db.run(`CREATE TABLE IF NOT EXISTS product_withdrawal (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )`);
 
+db.run(` CREATE TABLE IF NOT EXISTS weekly_report (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  report_date DATE NOT NULL,
+  type TEXT NOT NULL, -- مثل weekly_withdrawal أو monthly_log
+  data TEXT NOT NULL, -- سيتم تخزين البيانات على شكل JSON
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+)`);
+db.run(`CREATE TABLE IF NOT EXISTS monthly_report (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  report_date DATE NOT NULL,
+  type TEXT NOT NULL, -- مثل weekly_withdrawal أو monthly_log
+  data TEXT NOT NULL, -- سيتم تخزين البيانات على شكل JSON
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+)`);
+
 
 const validateCreateWithdrawl = (obj) => {
     const productSchema = joi.object({

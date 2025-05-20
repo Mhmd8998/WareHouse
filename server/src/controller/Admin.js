@@ -1,7 +1,7 @@
 const db = require('../DB/db');
 const asyncHandler = require("express-async-handler");
 require("../jobs/MonthlyReports");
-require("../jobs/WeklyReports");
+require("../jobs/WeeklyReports");
 
 
 module.exports = {
@@ -35,4 +35,31 @@ module.exports = {
             return res.status(500).json({ message: "حدث خطأ في قاعدة البيانات." });
         }
     }),
+updateNotificationReadStatus: asyncHandler(async (req, res) => {
+    const notificationId = req.params.id; // أو استخدم req.body.id إذا كان في الجسم
+    if (!notificationId) {
+        return res.status(400).json({ message: "رقم الإشعار غير موجود" });
+    }
+
+    try {
+        // تحديث حالة الإشعار إلى "مقروء"
+        db.run(`UPDATE notifications SET isRead = 1 WHERE id = ?`, [notificationId], function(err) {
+            if (err) {
+                console.error("Error updating notification status:", err);
+                return res.status(500).json({ message: "حدث خطأ أثناء تحديث الإشعار" });
+            }
+            // إذا تم التحديث بنجاح
+            if (this.changes > 0) {
+                return res.status(200).json({ message: `تم تحديث حالة الإشعار ID ${notificationId} إلى مقروء.` });
+            } else {
+                return res.status(404).json({ message: "لم يتم العثور على الإشعار" });
+            }
+        });
+    } catch (error) {
+        console.error("Error in updateNotificationReadStatus:", error);
+        return res.status(500).json({ message: "حدث خطأ غير متوقع." });
+    }
+}),
+
+
 };

@@ -17,15 +17,16 @@ function verifyToken (req, res, next){
     return res.status(401).json({ message: "No Token Provided" });
   }
 }
-function verifyTokenAndAdmin(req, res, next){
+function verifyTokenAndAdmin(req, res, next) {
   verifyToken(req, res, () => {
-    if (req.user.isAdmin){
+    if (req.user && Number(req.user.isAdmin) === 1) {
       next();
-    }else{
-      return res.status(401).json({ message: "Not allowed, only admin" });
+    } else {
+      return res.status(403).json({ message: "Not allowed, admin only" });
     }
   });
 }
+
 
 function verifyTokenAndUserId(req, res, next){
   verifyToken(req, res, () => {

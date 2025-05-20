@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';  // استيراد FontAwesomeIcon
+import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';  // استيراد الأيقونات
 
 export default function Withdraw() {
   const [products, setProducts] = useState([
@@ -21,22 +23,20 @@ export default function Withdraw() {
     const updatedProducts = [...products];
     updatedProducts[index][field] = value;
 
-    // نسخ الملاحظة والمستلم من المنتج الأول إلى باقي المنتجات
-    if (index === 0 && (field === "note" || field === "recipient")) {
-      for (let i = 1; i < updatedProducts.length; i++) {
-        updatedProducts[i][field] = value;
-      }
-    }
-
     setProducts(updatedProducts);
   };
 
   const addProduct = () => {
-    const noteFromFirst = products[0]?.note || "";
-    const recipientFromFirst = products[0]?.recipient || "";
+    const firstProduct = products[0];
     setProducts([
       ...products,
-      { product_name: "", quantity: 1, note: noteFromFirst, status: "جديد", recipient: recipientFromFirst },
+      {
+        product_name: "",
+        quantity: 1,
+        note: firstProduct.note, // نسخ الملاحظة من المنتج الأول
+        status: "جديد", // تعيين الحالة الافتراضية
+        recipient: firstProduct.recipient, // نسخ المستلم من المنتج الأول
+      },
     ]);
   };
 
@@ -52,6 +52,14 @@ export default function Withdraw() {
     if (!token) {
       setMessage("يرجى تسجيل الدخول أولاً");
       return;
+    }
+
+    // التحقق من الحقول المطلوبة
+    for (let product of products) {
+      if (!product.product_name || !product.recipient || product.quantity <= 0) {
+        setMessage("يجب ملء جميع الحقول بشكل صحيح.");
+        return;
+      }
     }
 
     try {
@@ -79,100 +87,109 @@ export default function Withdraw() {
 
   return (
     <div className="container mt-5" dir="rtl">
-      <h2 className="text-center mb-4">سحب منتجات</h2>
+      <h2 className="text-center mb-4 text-primary">📦 سحب منتجات</h2>
 
       <form onSubmit={handleSubmit}>
         {products.map((product, index) => (
-          <div className="card mb-3" key={index}>
+          <div className="card mb-3 shadow-lg rounded" key={index}>
             <div className="card-body">
-              <div className="mb-3">
-                <label className="form-label">اسم المنتج:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={product.product_name}
-                  onChange={(e) => handleProductChange(index, "product_name", e.target.value)}
-                  required
-                />
+              <div className="row mb-3">
+                <div className="col-md-4">
+                  <input
+                    type="text"
+                    className="form-control shadow-sm"
+                    value={product.product_name}
+                    placeholder="اسم المنتج"
+                    onChange={(e) => handleProductChange(index, "product_name", e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="col-md-4">
+                  <input
+                    type="number"
+                    className="form-control shadow-sm"
+                    value={product.quantity}
+                    min={1}
+                    placeholder="الكمية"
+                    onChange={(e) =>
+                      handleProductChange(index, "quantity", parseInt(e.target.value))
+                    }
+                    required
+                  />
+                </div>
+
+                {/* عرض حقل الحالة فقط في المنتج الأول */}
+                {index === 0 && (
+                  <div className="col-md-4">
+                    <select
+                      className="form-select shadow-sm"
+                      value={product.status}
+                      onChange={(e) => handleProductChange(index, "status", e.target.value)}
+                    >
+                      {statusOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
 
-              <div className="mb-3">
-                <label className="form-label">الكمية:</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={product.quantity}
-                  min={1}
-                  onChange={(e) =>
-                    handleProductChange(index, "quantity", parseInt(e.target.value))
-                  }
-                  required
-                />
-              </div>
-
+              {/* عرض الحقول الأخرى فقط في المنتج الأول */}
               {index === 0 && (
-                <>
-                  <div className="mb-3">
-                    <label className="form-label">الملاحظة:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={product.note}
-                      onChange={(e) => handleProductChange(index, "note", e.target.value)}
-                    />
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <input
+                        type="text"
+                        className="form-control shadow-sm"
+                        value={product.note}
+                        placeholder="الملاحظة"
+                        onChange={(e) => handleProductChange(index, "note", e.target.value)}
+                      />
+                    </div>
                   </div>
 
-                  <div className="mb-3">
-                    <label className="form-label">المستلم:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={product.recipient}
-                      onChange={(e) => handleProductChange(index, "recipient", e.target.value)}
-                      required
-                    />
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <input
+                        type="text"
+                        className="form-control shadow-sm"
+                        value={product.recipient}
+                        placeholder="المستلم"
+                        onChange={(e) => handleProductChange(index, "recipient", e.target.value)}
+                        required
+                      />
+                    </div>
                   </div>
-                </>
+                </div>
               )}
-
-              <div className="mb-3">
-                <label className="form-label">الحالة:</label>
-                <select
-                  className="form-select"
-                  value={product.status}
-                  onChange={(e) => handleProductChange(index, "status", e.target.value)}
-                >
-                  {statusOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
 
               <button
                 type="button"
-                className="btn btn-danger"
+                className="btn btn-danger shadow-sm"
                 onClick={() => removeProduct(index)}
               >
-                حذف
+                <FontAwesomeIcon icon={faTrashAlt} /> {/* أيقونة الحذف */}
               </button>
             </div>
           </div>
         ))}
 
         <div className="mb-3">
-          <button type="button" className="btn btn-secondary me-2" onClick={addProduct}>
-            ➕ إضافة منتج آخر
+          <button type="button" className="btn btn-secondary shadow-sm me-2" onClick={addProduct}>
+            <FontAwesomeIcon icon={faPlus} /> {/* أيقونة إضافة منتج */}
           </button>
-          <button type="submit" className="btn btn-success">
-            📦 سحب المنتجات
+          <button type="submit" className="btn btn-success shadow-sm">
+            🛒 سحب المنتجات
           </button>
         </div>
       </form>
 
       {message && (
-        <div className="alert alert-info text-center" role="alert">
+        <div className={`alert alert-${message.includes("فشل") ? "danger" : "info"} text-center fadeIn`} role="alert">
           {message}
         </div>
       )}

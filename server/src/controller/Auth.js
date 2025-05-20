@@ -46,7 +46,7 @@ module.exports={
             if(!isMatch){
                 return res.status(401).json({message:"Invalid username or password"})
             }
-            const token = jwt.sign({id:existingUser.id},process.env.JWT_SECRET,{expiresIn:"1d"});
+            const token = jwt.sign({ id: existingUser.id, isAdmin: existingUser.isAdmin },process.env.JWT_SECRET,{expiresIn:"1d"});
             const user_id = existingUser.id
             res.status(200).json({message:"login success",token,user_id})})
     })

@@ -26,7 +26,7 @@ module.exports = {
 
             if (existingProduct) {
                 // تحديث الكمية في المنتج
-                const newQuantity = existingProduct.quantity + quantity;
+                const newQuantity = Number(existingProduct.quantity) + Number(quantity);
 
                 await new Promise((resolve, reject) => {
                     db.run(
@@ -55,8 +55,8 @@ module.exports = {
                 await new Promise((resolve, reject) => {
                     const notifMessage = `تم تحديث كمية المنتج ${name} (${status}) بمقدار ${quantity}`;
                     db.run(
-                        "INSERT INTO notifications (message, status, user_id) VALUES (?, ?, ?)",
-                        [notifMessage, status, req.user.id],
+                        "INSERT INTO notifications (message,  user_id) VALUES ( ?, ?)",
+                        [notifMessage, req.user.id],
                         (err) => {
                             if (err) reject(err);
                             else resolve();
@@ -98,8 +98,8 @@ module.exports = {
             await new Promise((resolve, reject) => {
                 const notifMessage = `تمت إضافة منتج جديد: ${name} (${status}) بكمية ${quantity}`;
                 db.run(
-                    "INSERT INTO notifications (message, status, user_id) VALUES (?, ?, ?)",
-                    [notifMessage, status, req.user.id],
+                    "INSERT INTO notifications (message, user_id) VALUES (?, ?)",
+                    [notifMessage,  req.user.id],
                     (err) => {
                         if (err) reject(err);
                         else resolve();

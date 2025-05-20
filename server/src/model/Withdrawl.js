@@ -10,7 +10,7 @@ db.run(`CREATE TABLE IF NOT EXISTS product_withdrawal (
     recipient TEXT NOT NULL,
     user_id INTEGER NOT NULL,
     note TEXT,  -- ملاحظة السحب
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- باستخدام TIMESTAMP بدلاً من DATETIME
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )`);
@@ -36,7 +36,7 @@ const validateCreateWithdrawl = (obj) => {
         product_name: joi.string().trim().max(100).min(3).required(),
         note: joi.string().trim().max(200).min(3),
         status:joi.string().trim().max(50).min(3).required(),
-        recipient:joi.string().trim().max(50).required(),
+        recipient:joi.string().trim().max(50).min(3).required(),
         quantity: joi.number().integer().min(1).required()
     });
 

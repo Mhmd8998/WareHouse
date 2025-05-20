@@ -6,15 +6,15 @@ db.run(`CREATE TABLE IF NOT EXISTS user(
         password TEXT NOT NULL,
         isAdmin BOOLEAN DEFAULT 0
     )`);
-db.run(`CREATE TABLE notifications (
+db.run(`CREATE TABLE IF NOT EXISTS notifications (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  message TEXT,
-  user_id INTEGER,
-  read INTEGER DEFAULT 0,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  message TEXT NOT NULL,   -- تأكد من أن الرسالة لا يمكن أن تكون فارغة
+  user_id INTEGER,        -- معرف المستخدم المرتبط بالإشعار
+  isRead INTEGER DEFAULT 0, -- تعيين القيمة الافتراضية إلى 0 (غير مقروء)
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- الوقت الافتراضي هو الوقت الحالي
+  FOREIGN KEY (user_id) REFERENCES users(id)  -- العلاقة مع جدول المستخدمين
 )`);
-    
+
     const validateRegisterUser = (obj) => {
         const schema = joi.object({
           username: joi.string().trim().max(100).min(3).required(),

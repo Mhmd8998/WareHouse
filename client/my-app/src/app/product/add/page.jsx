@@ -15,6 +15,7 @@ export default function AddProduct() {
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) setToken(storedToken);
+    if (!token) router.push("/login");
   }, []);
 
   const handleImageChange = (e) => {

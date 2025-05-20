@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Search() {
   const [name, setName] = useState("");
@@ -9,10 +10,12 @@ export default function Search() {
   const [message, setMessage] = useState("");
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
+  
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) setToken(storedToken);
+    if (!token) router.push("/login");
   }, []);
 
   const handleSearch = async () => {

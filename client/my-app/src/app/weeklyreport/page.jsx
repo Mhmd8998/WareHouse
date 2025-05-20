@@ -1,13 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function WeeklyReport() {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const router = useRouter();
+  
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      router.push('/login');
+    }
+  }, []);
+  
   const [selectedTables, setSelectedTables] = useState({
     inputs: true,
     withdrawals: true,

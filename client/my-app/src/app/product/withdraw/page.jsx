@@ -17,6 +17,7 @@ export default function Withdraw() {
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) setToken(storedToken);
+    if (!token) router.push("/login");
   }, []);
 
   const handleProductChange = (index, field, value) => {
